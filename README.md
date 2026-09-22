@@ -1,78 +1,98 @@
 # VoiceMed AI
 
-Voice-powered medical documentation for India's 22 languages.
+An evidence-first prototype for multilingual speech capture, schema-constrained clinical entity extraction, draft generation, and mandatory human review.
 
-Doctors speak in Hindi, Tamil, Telugu, or any Indian language. VoiceMed AI transcribes the speech, extracts medical entities (symptoms, diagnoses, medications, lab values, vitals), and generates structured clinical reports -- in seconds.
+VoiceMed AI is a documentation aid and research project. It does not diagnose, recommend treatment, replace professional judgment, or qualify as a medical device. The public demo is designed for synthetic data only.
 
-## The Problem
+## What is implemented
 
-India has 1 doctor per 1,000 people. Rural doctors spend 30-40% of their time on paperwork. All medical software demands English, but doctors speak in their local language. Result: handwritten notes that are illegible, lost, and never digitized.
+- Deterministic no-key workflow with a public synthetic fixture.
+- Optional OpenAI transcription and Gemini extraction/report adapters with server-side secrets.
+- Strict Zod contracts for request bodies and provider-generated clinical entities.
+- Input size limits, supported audio-type checks, no-store responses, and process-local burst limiting.
+- Explicit unreviewed state and a required human-review checkbox before read aloud or download.
+- No database, report history, browser storage, or application-managed audio retention.
+- Unit and contract tests plus a Playwright test for the complete review gate.
 
-## How It Works
+## Architecture
 
-1. **Speak** -- Record in any of 22 Indian languages
-2. **Transcribe** -- Whisper ASR converts speech to text
-3. **Extract** -- Gemini extracts symptoms, diagnoses, medications, lab values, vitals
-4. **Report** -- A structured clinical report is generated with ICD codes and lab references
-5. **Verify** -- Report is read back in the source language via TTS
+```text
+synthetic fixture or microphone
+              |
+              v
+     transcription adapter
+              |
+              v
+       validated transcript
+              |
+              v
+       clinical provider
+              |
+              v
+      strict entity schema
+              |
+              v
+        unreviewed draft
+              |
+              v
+       explicit human review
+              |
+              v
+       user initiated export
+```
 
-## Tech Stack
+Provider output is never rendered as trusted structure until it passes the schema. The zero-key path remains deterministic, so a reviewer can inspect the product when external providers are unavailable.
 
-- **Next.js 15** + TypeScript + Tailwind CSS v4
-- **OpenAI Whisper** for speech-to-text (22+ Indian languages)
-- **Google Gemini 2.0 Flash** for medical entity extraction
-- **NidaanKosha dataset** -- 50 lab tests with Indian population reference ranges
-- **Framer Motion** for animations
-- **Vitest** for testing
-
-## Getting Started
+## Run locally
 
 ```bash
-npm install
-
-# Add your API keys
-cp .env.example .env.local
-# Edit .env.local with your OpenAI and Gemini API keys
-
+npm ci
+npm run check
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open `http://localhost:3000/console` and select **Run synthetic example**.
 
-The app works in **demo mode** without API keys -- all API routes return realistic sample data.
+Optional provider configuration:
 
-## Pages
+```bash
+cp .env.example .env.local
+```
 
-| Route | Description |
-|-------|-------------|
-| `/` | Landing page with pitch, stats, how-it-works |
-| `/console` | Voice recording console -- the core product |
-| `/reports` | Previously generated reports (localStorage) |
-| `/reference` | 50 lab test reference ranges from NidaanKosha |
-| `/about` | Problem statement, tech stack, data sources |
+Secrets stay server-side. Do not add real patient data to the public prototype.
 
-## API Routes
+## Verification
 
-| Route | Method | Description |
-|-------|--------|-------------|
-| `/api/transcribe` | POST | Audio blob to text via Whisper |
-| `/api/extract` | POST | Transcript to structured medical entities via Gemini |
-| `/api/report` | POST | Entities to formatted clinical report via Gemini |
-| `/api/tts` | POST | TTS info (client-side SpeechSynthesis for MVP) |
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run test:e2e
+npm run build
+```
 
-## Environment Variables
+The browser test verifies that export remains disabled until the human-review state is explicit.
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `OPENAI_API_KEY` | No (demo mode) | OpenAI API key for Whisper transcription |
-| `GOOGLE_GEMINI_API_KEY` | No (demo mode) | Google Gemini key for entity extraction |
+## Security and privacy boundaries
 
-## Data Sources
+- The application does not persist audio, transcripts, entities, or generated drafts.
+- API responses use `Cache-Control: no-store`.
+- Audio is limited to supported types and 10 MB.
+- Text payloads and output arrays have bounded schemas.
+- The in-memory rate limiter is suitable only as a best-effort demo guard. A multi-instance production service needs a shared store.
+- Configuring an external provider sends submitted content to that provider under its terms.
 
-- [NidaanKosha-100k](https://huggingface.co/datasets/ekacare/NidaanKosha-100k-V1.0) -- 6.8M lab readings from Indian patients
-- [AI4Bharat](https://ai4bharat.iitm.ac.in/) -- Indian language speech and NLP models
-- [BHASHINI](https://bhashini.gov.in/) -- India's multilingual digital infrastructure
+## Limitations
 
-## Disclaimer
+- The no-key mode demonstrates workflow contracts, not model accuracy.
+- No clinical accuracy or latency metric is claimed yet.
+- The language selector is broader than the checked evaluation coverage.
+- Public provider evaluation, threat modeling, durable distributed rate limiting, and independent clinical review remain release gates.
 
-VoiceMed AI is a clinical documentation aid. It does not provide medical diagnoses. All output must be reviewed by qualified healthcare professionals.
+## Clean-room statement
+
+The code and synthetic fixtures are independent public portfolio work. They contain no employer, customer, or patient data.
+
+## License
+
+MIT

@@ -4,8 +4,8 @@ import { Navbar } from "@/components/navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "VoiceMed AI - Voice-Powered Medical Documentation", template: "%s | VoiceMed AI" },
-  description: "Voice-powered medical documentation for India's 22 languages. Speak, transcribe, extract, report.",
+  title: { default: "VoiceMed AI | Human-reviewed documentation lab", template: "%s | VoiceMed AI" },
+  description: "A synthetic-data prototype for multilingual transcription, schema-constrained extraction, and human-reviewed clinical documentation drafts.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

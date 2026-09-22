@@ -9,12 +9,14 @@ export async function POST(request: Request) {
 
     const { text, language } = body as { text: string; language?: string };
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: "TTS is handled client-side via browser SpeechSynthesis API for the MVP. Use the speakText() utility.",
       text: text.slice(0, 200),
       language: language ?? "en",
       hint: "Upgrade path: integrate AI4Bharat Indic-Parler-TTS or VEXYL-TTS for production-quality Indian language speech synthesis.",
     });
+    response.headers.set("Cache-Control", "no-store, max-age=0");
+    return response;
   } catch {
     return NextResponse.json({ error: "TTS request failed" }, { status: 500 });
   }

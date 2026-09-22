@@ -1,6 +1,6 @@
 "use client";
 
-import { primaryLanguages, type Language } from "@/data/languages";
+import { primaryLanguages } from "@/data/languages";
 import { cn } from "@/lib/utils";
 import { Globe } from "lucide-react";
 

@@ -8,25 +8,25 @@ import { languages } from "@/data/languages";
 import { labReferences } from "@/data/lab-references";
 
 const stats = [
-  { label: "Languages Supported", value: languages.length, icon: Languages },
-  { label: "Lab Tests Mapped", value: labReferences.length, icon: Database },
-  { label: "Real-time Processing", value: "<3s", icon: Zap },
+  { label: "Language options", value: languages.length, icon: Languages },
+  { label: "Synthetic lab references", value: labReferences.length, icon: Database },
+  { label: "Review required", value: "100%", icon: Shield },
 ];
 
 const steps = [
-  { icon: Mic, title: "Speak", desc: "Record in any Indian language — Hindi, Tamil, Telugu, or 19 more.", color: "from-indigo-500 to-violet-500" },
-  { icon: Brain, title: "Understand", desc: "AI transcribes speech and extracts symptoms, diagnoses, medications, and vitals.", color: "from-violet-500 to-purple-500" },
-  { icon: FileText, title: "Document", desc: "A structured clinical report is generated instantly with ICD codes and lab references.", color: "from-purple-500 to-pink-500" },
-  { icon: Volume2, title: "Verify", desc: "The report is read back in your language for confirmation before saving.", color: "from-pink-500 to-rose-500" },
+  { icon: Mic, title: "Capture", desc: "Record a synthetic note or use the deterministic no-key example.", color: "from-indigo-500 to-violet-500" },
+  { icon: Brain, title: "Structure", desc: "Validate explicitly documented symptoms, diagnoses, medications, and vitals against a schema.", color: "from-violet-500 to-purple-500" },
+  { icon: FileText, title: "Draft", desc: "Render validated fields as a concise, clearly labelled unreviewed note.", color: "from-purple-500 to-pink-500" },
+  { icon: Volume2, title: "Review", desc: "Require human confirmation before read aloud or download is enabled.", color: "from-pink-500 to-rose-500" },
 ];
 
 const features = [
-  { icon: Languages, title: "22 Indian Languages", desc: "Hindi, Bengali, Telugu, Marathi, Tamil, Gujarati, Kannada, Malayalam, and 14 more official languages." },
-  { icon: Brain, title: "Medical NER via Gemini", desc: "Extracts symptoms, diagnoses, medications, lab values, and vitals from free-text clinical narratives." },
-  { icon: Database, title: "NidaanKosha Reference", desc: `${labReferences.length} lab tests with Indian population reference ranges, LOINC-mapped and gender-stratified.` },
-  { icon: Shield, title: "Privacy First", desc: "Audio processed in real-time and never stored. All data stays on your device for the MVP." },
-  { icon: FileText, title: "Structured Reports", desc: "Professional clinical reports with ICD-10 codes, medication tables, and follow-up instructions." },
-  { icon: Zap, title: "Instant Processing", desc: "Whisper ASR + Gemini extraction in under 3 seconds. No waiting, no typing." },
+  { icon: Languages, title: "Multilingual inputs", desc: "Twenty two language options make the interface testable across common Indian language selections." },
+  { icon: Brain, title: "Schema constrained output", desc: "Provider output is rejected unless it matches the documented clinical entity schema." },
+  { icon: Database, title: "Reference explorer", desc: `${labReferences.length} public lab reference entries are exposed as a separate, reviewable dataset.` },
+  { icon: Shield, title: "Session only", desc: "The public prototype saves no report history and asks reviewers to use synthetic data only." },
+  { icon: FileText, title: "Explicit draft state", desc: "Generated content is labelled unreviewed and export stays locked until a human review step." },
+  { icon: Zap, title: "Deterministic demo", desc: "The complete no-key flow works with a fixed synthetic fixture when model providers are unavailable." },
 ];
 
 export default function HomePage() {
@@ -37,20 +37,20 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28 relative z-10">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="max-w-3xl">
             <span className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-4 py-1.5 text-xs font-semibold text-indigo-700 uppercase tracking-wider mb-6">
-              <Mic className="h-3.5 w-3.5" /> For India&rsquo;s 1.2 Million Doctors
+              <Mic className="h-3.5 w-3.5" /> Human reviewed AI documentation lab
             </span>
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl leading-[1.1]">
-              Document patients in{" "}
-              <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">your language</span>,
-              not theirs
+              Turn speech into a{" "}
+              <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">reviewable draft</span>,
+              with clear safety boundaries
             </h1>
             <p className="mt-6 text-lg text-gray-600 leading-relaxed max-w-xl">
-              Speak in Hindi, Tamil, Telugu, or any Indian language. VoiceMed AI transcribes, extracts medical entities, and generates structured clinical reports — in seconds.
+              A synthetic-data prototype for multilingual transcription, schema-constrained extraction, draft generation, and mandatory professional review.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/console">
                 <Button size="lg" className="bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-500/20">
-                  <Mic className="h-4 w-4" /> Open Console
+                  <Mic className="h-4 w-4" /> Run synthetic demo
                 </Button>
               </Link>
               <Link href="/about">
@@ -111,11 +111,11 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-20 sm:px-6 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Ready to transform medical documentation?</h2>
-        <p className="mt-3 text-gray-600">No signup needed. Start recording in your language right now.</p>
+        <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Inspect the complete workflow</h2>
+        <p className="mt-3 text-gray-600">No account or provider key is required for the deterministic synthetic example.</p>
         <Link href="/console">
           <Button size="lg" className="mt-6 bg-indigo-600 hover:bg-indigo-500">
-            <Mic className="h-4 w-4" /> Try VoiceMed AI
+            <Mic className="h-4 w-4" /> Open documentation lab
           </Button>
         </Link>
       </section>

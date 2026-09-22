@@ -25,10 +25,11 @@ Given a clinical transcript (which may be in Hindi, Tamil, Telugu, Bengali, or a
   "summary": "One-line clinical summary in English"
 }
 
-Rules:
+Safety rules:
 - Always translate entity names to English for the structured output
 - Keep the "original" field in the source language for reference
-- Infer severity from context (e.g. "bahut dard" = severe pain)
+- Extract only information explicitly present in the transcript
+- Never add a diagnosis, treatment, dosage, severity, or ICD code that was not explicitly documented
 - Use standard medical terminology in English outputs
 - If a value is not mentioned, omit the field entirely
 - Return ONLY the JSON object, no markdown, no explanation`;
@@ -72,6 +73,7 @@ Format:
 
 Rules:
 - Use professional medical language
-- Mark abnormal lab values clearly
-- Include ICD codes where available
+- Do not infer or recommend diagnoses, medications, investigations, or treatment
+- Include ICD codes only when they are present in the validated input
+- Label the output as an unreviewed draft
 - Keep it concise but complete`;

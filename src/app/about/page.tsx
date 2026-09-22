@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import { Mic, Brain, Database, Shield, Globe, Zap } from "lucide-react";
 
 const stack = [
-  { icon: Mic, name: "OpenAI Whisper", desc: "Speech-to-text supporting 22+ Indian languages" },
-  { icon: Brain, name: "Google Gemini 2.0 Flash", desc: "Medical entity extraction and report generation" },
-  { icon: Database, name: "NidaanKosha Dataset", desc: "6.8M lab readings from Indian patients, LOINC-mapped" },
-  { icon: Globe, name: "Next.js 15 + TypeScript", desc: "Full-stack framework with API routes, deployed on Vercel" },
+  { icon: Mic, name: "Transcription adapter", desc: "Deterministic demo mode with an optional OpenAI Whisper provider" },
+  { icon: Brain, name: "Clinical provider adapter", desc: "Schema-validated demo mode with optional Gemini extraction and drafting" },
+  { icon: Database, name: "Public reference explorer", desc: "A separate, inspectable set of lab reference entries" },
+  { icon: Globe, name: "Next.js + TypeScript", desc: "Full-stack routes, typed contracts, and a no-key demo path" },
   { icon: Zap, name: "Tailwind CSS v4 + Framer Motion", desc: "Modern UI with accessible, responsive design" },
-  { icon: Shield, name: "Privacy-First Architecture", desc: "Audio processed in real-time, never stored on servers" },
+  { icon: Shield, name: "Public-demo boundary", desc: "Synthetic-data-only guidance, no report history, explicit review before export" },
 ];
 
 export default function AboutPage() {
@@ -18,12 +18,10 @@ export default function AboutPage() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">About VoiceMed AI</h1>
         <p className="mt-4 text-lg text-gray-600 leading-relaxed">
-          India has <strong>1 doctor per 1,000 people</strong>. Most rural doctors spend 30-40% of their time on paperwork
-          instead of patients. They speak in their local language, but all medical software demands English.
+          VoiceMed AI explores a narrow engineering question: how can a multilingual speech workflow produce structured documentation while making uncertainty and review state visible?
         </p>
         <p className="mt-3 text-lg text-gray-600 leading-relaxed">
-          VoiceMed AI fixes this. <strong>Speak in any Indian language</strong>, and the system transcribes, extracts medical
-          entities, and generates structured clinical reports — in seconds, not hours.
+          It is an <strong>end-to-end research prototype</strong>, not a diagnosis system or medical device. The default path uses synthetic fixtures, provider output is schema validated, and a human review gate is required before export.
         </p>
       </motion.div>
 

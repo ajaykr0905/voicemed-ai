@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Mic, Square, Loader2 } from "lucide-react";
+import { Mic, Square } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { getMicrophoneAccess, createMediaRecorder } from "@/lib/audio";
@@ -29,14 +29,14 @@ export function VoiceRecorder({ onRecordingComplete, disabled }: VoiceRecorderPr
     };
   }, []);
 
-  const updateLevels = useCallback(() => {
+  const updateLevels = useCallback(function tick() {
     if (!analyserRef.current) return;
     const data = new Uint8Array(analyserRef.current.frequencyBinCount);
     analyserRef.current.getByteFrequencyData(data);
     const step = Math.floor(data.length / 20);
     const newLevels = Array.from({ length: 20 }, (_, i) => Math.max(4, (data[i * step] / 255) * 40));
     setLevels(newLevels);
-    animRef.current = requestAnimationFrame(updateLevels);
+    animRef.current = requestAnimationFrame(tick);
   }, []);
 
   const startRecording = useCallback(async () => {

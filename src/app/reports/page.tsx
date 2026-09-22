@@ -1,103 +1,42 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { FileText, Clock, Globe, Trash2 } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import Link from "next/link";
+import { Database, FileDown, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { languages } from "@/data/languages";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-interface SavedReport {
-  id: string;
-  language: string;
-  timestamp: string;
-  transcript: string;
-  report: string;
-}
+const boundaries = [
+  {
+    icon: Database,
+    title: "No application history",
+    detail: "The public prototype does not save transcripts, extracted entities, audio, or generated drafts in a database or browser storage.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Human review is mandatory",
+    detail: "Read aloud and download controls remain disabled until the reviewer explicitly confirms that the draft was checked.",
+  },
+  {
+    icon: FileDown,
+    title: "Export is explicit",
+    detail: "A reviewed Markdown file is created only when the reviewer chooses Download. The application does not retain that file.",
+  },
+];
 
-export default function ReportsPage() {
-  const [reports, setReports] = useState<SavedReport[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
-
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem("voicemed-reports") ?? "[]");
-      setReports(saved);
-    } catch { /* ignore */ }
-  }, []);
-
-  const deleteReport = (id: string) => {
-    const updated = reports.filter((r) => r.id !== id);
-    setReports(updated);
-    localStorage.setItem("voicemed-reports", JSON.stringify(updated));
-    if (selected === id) setSelected(null);
-  };
-
-  const activeReport = reports.find((r) => r.id === selected);
-
+export default function DataPolicyPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Report History</h1>
-        <p className="text-sm text-gray-600 mt-1">{reports.length} saved reports (stored locally)</p>
+    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-indigo-600">Public demo boundary</p>
+      <h1 className="mt-3 text-3xl font-bold text-gray-900 sm:text-4xl">Session only by design</h1>
+      <p className="mt-4 max-w-2xl text-lg leading-relaxed text-gray-600">VoiceMed AI is a portfolio prototype for synthetic data. It deliberately omits report history so reviewers can inspect the workflow without creating a hidden store of sensitive information.</p>
+      <div className="mt-10 grid gap-4 sm:grid-cols-3">
+        {boundaries.map((boundary) => (
+          <Card key={boundary.title}>
+            <CardHeader><boundary.icon className="h-6 w-6 text-indigo-600" /><CardTitle className="mt-3 text-base">{boundary.title}</CardTitle></CardHeader>
+            <CardContent><p className="text-sm leading-relaxed text-gray-600">{boundary.detail}</p></CardContent>
+          </Card>
+        ))}
       </div>
-
-      {reports.length === 0 ? (
-        <Card className="flex flex-col items-center justify-center p-16 text-center">
-          <FileText className="h-12 w-12 text-gray-200 mb-4" />
-          <p className="text-gray-400 font-medium">No reports yet</p>
-          <p className="text-xs text-gray-300 mt-1">Generate a report from the Voice Console to see it here.</p>
-        </Card>
-      ) : (
-        <div className="grid gap-6 lg:grid-cols-3">
-          <div className="space-y-2 lg:col-span-1">
-            {reports.map((r, i) => {
-              const lang = languages.find((l) => l.code === r.language);
-              return (
-                <motion.button
-                  key={r.id}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => setSelected(r.id)}
-                  className={`w-full rounded-xl border p-4 text-left transition-all cursor-pointer ${selected === r.id ? "border-indigo-500 bg-indigo-50 shadow-sm" : "border-border bg-white hover:bg-gray-50"}`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{r.transcript.slice(0, 60)}...</p>
-                      <div className="mt-1.5 flex items-center gap-3 text-xs text-gray-400">
-                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{new Date(r.timestamp).toLocaleDateString()}</span>
-                        <span className="flex items-center gap-1"><Globe className="h-3 w-3" />{lang?.name ?? r.language}</span>
-                      </div>
-                    </div>
-                    <button onClick={(e) => { e.stopPropagation(); deleteReport(r.id); }} className="shrink-0 rounded p-1 text-gray-300 hover:text-red-500 hover:bg-red-50 cursor-pointer" aria-label="Delete">
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                </motion.button>
-              );
-            })}
-          </div>
-          <div className="lg:col-span-2">
-            {activeReport ? (
-              <Card>
-                <CardHeader><CardTitle className="text-sm flex items-center gap-2"><FileText className="h-4 w-4" /> Report</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="prose prose-sm prose-gray max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{activeReport.report}</ReactMarkdown>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              <Card className="flex items-center justify-center p-16 text-center">
-                <p className="text-gray-400 text-sm">Select a report to view</p>
-              </Card>
-            )}
-          </div>
-        </div>
-      )}
+      <div className="mt-10 rounded-xl border border-amber-200 bg-amber-50 p-5 text-sm leading-relaxed text-amber-900">Do not enter real patient data. Configuring third party provider keys sends the submitted content to those providers under their own terms. This prototype is not a medical device.</div>
+      <Link href="/console"><Button className="mt-8">Open the synthetic demo</Button></Link>
     </div>
   );
 }
